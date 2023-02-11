@@ -70,12 +70,14 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 const btnReset = document.querySelector('.btn-reset');
+const btnChange = document.querySelector('.btn-change');
 
 class App {
   #map;
   #mapZoomLevel = 13;
   #mapEvent;
-  #workouts = [];
+  #workout = [];
+  workout1;
 
   constructor() {
     // Get user's position
@@ -89,6 +91,7 @@ class App {
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
     btnReset.addEventListener('click', this.reset);
     containerWorkouts.addEventListener('click', this.delete);
+    containerWorkouts.addEventListener('click', this.edit.bind(this));
   }
   _getPosition() {
     if (navigator.geolocation)
@@ -112,7 +115,7 @@ class App {
     }).addTo(this.#map);
 
     this.#map.on('click', this._showForm.bind(this));
-    this.#workouts.forEach(work => {
+    this.#workout.forEach(work => {
       this.renderWorkoutMarker(work);
     });
   }
@@ -178,8 +181,8 @@ class App {
       workout = new Cyclyng([lat, lng], distance, duration, elevation);
     }
     // Add new object to workout array
-    this.#workouts.push(workout);
-    console.log(this.#workouts);
+    this.#workout.push(workout);
+    console.log(this.#workout);
 
     // Render workout on map as marker
     this.renderWorkoutMarker(workout);
@@ -213,7 +216,11 @@ class App {
   _renderWorkout(workout) {
     let html = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
-      <div class="btn btn-delete"> <span class= btn-delete__cross>&times;</span></div>
+      <div class="btn btn-corner btn-delete"> <span class= btn-delete__cross>&times;</span></div>
+      <div class="btn btn-corner btn-edit"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="btn-edit__pencil">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+    </svg>
+    </div>
       <h2 class="workout__title">${workout.description}</h2>
       <div class="workout__details">
       <span class="workout__icon">${
@@ -257,14 +264,14 @@ class App {
         </li> -->
     `;
 
-    form.insertAdjacentHTML('afterend', html);
+    btnChange.insertAdjacentHTML('afterend', html);
   }
   _moveToPopup(e) {
     const workoutEl = e.target.closest('.workout');
 
     if (!workoutEl) return;
 
-    const workout = this.#workouts.find(
+    const workout = this.#workout.find(
       work => work.id === workoutEl.dataset.id
     );
 
@@ -280,16 +287,16 @@ class App {
   }
 
   _setLocalStorage() {
-    localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+    localStorage.setItem('workouts', JSON.stringify(this.#workout));
   }
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem('workouts'));
 
     if (!data) return;
 
-    this.#workouts = data;
+    this.#workout = data;
 
-    this.#workouts.forEach(work => {
+    this.#workout.forEach(work => {
       this._renderWorkout(work);
     });
   }
@@ -309,6 +316,52 @@ class App {
     localStorage.setItem('workouts', JSON.stringify(filtered));
     location.reload();
   }
+  edit(e) {
+    const btnEdit = e.target.closest('.btn-edit');
+    const workouts = JSON.parse(localStorage.getItem('workouts'));
+    console.log();
+    if (btnEdit) {
+      const workoutEl = btnEdit.parentElement;
+      this.workout1 = workouts.findIndex(
+        work => work.id === workoutEl.dataset.id
+      );
+      btnChange.classList.remove('hidden');
+      console.log(e.target);
+      console.log(this.workout1);
+
+      // Find workout by id
+      form.classList.remove('hidden');
+      inputDistance.focus();
+      inputDistance.value = this.#workout[this.workout1].distance;
+      inputDuration.value = this.#workout[this.workout1].duration;
+      if (this.#workout[this.workout1].type === 'running')
+        inputCadence.value = this.#workout[this.workout1].cadence;
+
+      if (this.#workout[this.workout1].type === 'cycling')
+        inputElevation.value = this.#workout[this.workout1].elevationGain;
+    }
+    console.log(this.#workout[this.workout1]);
+    if (e.target === btnChange) {
+      this.#workout[this.workout1].distance = Number(inputDistance.value);
+      this.#workout[this.workout1].duration = Number(inputDuration.value);
+      if (this.#workout[this.workout1].type === 'running') {
+        this.#workout[this.workout1].cadence = inputCadence.value;
+        // this.#workout[this.workout1].calcPace();
+      }
+      if (this.#workout[this.workout1].type === 'cycling') {
+        this.#workout[this.workout1].elevationGain = inputElevation.value;
+        // this.#workout[this.workout1].calcSpeed();
+      }
+      console.log(this.#workout[this.workout1]);
+      console.log(this.#workout);
+      localStorage.removeItem('workouts');
+      localStorage.setItem('workouts', JSON.stringify(this.#workout));
+    }
+  }
+
+  // Make menu for change
+  // Change data
+  // Upload new data to local storage
 }
 
 const app = new App();

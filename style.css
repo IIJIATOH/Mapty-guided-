@@ -118,6 +118,47 @@ a:visited {
 .btn {
   cursor: pointer;
 }
+.btn-left {
+  background-color: var(--color-dark--2);
+  color: var(--color-light--2);
+  font-size: 1.7rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 1.75rem;
+}
+.btn-left:hover {
+  background-color: var(--color-light--1);
+}
+.btn-left:active {
+  transition: all 0.15s;
+  transform: scale(0.9);
+}
+.btn-corner {
+  background-color: var(--color-light--2);
+  padding: 1rem;
+  border-radius: 50%;
+}
+.btn-edit {
+  position: absolute;
+  right: 30px;
+  top: 0;
+}
+.btn-edit__pencil {
+  position: absolute;
+  color: var(--color-dark--1);
+  height: 15px;
+  width: 15px;
+  right: 2px;
+  top: 3.3px;
+}
+.btn-change {
+  width: 100%;
+}
+.hidden {
+  display: none;
+}
 .btn-delete__cross {
   position: absolute;
   color: var(--color-dark--1);
@@ -127,29 +168,10 @@ a:visited {
 }
 .btn-delete {
   position: absolute;
-  background-color: var(--color-light--2);
-  padding: 1rem;
-  border-radius: 50%;
   right: 0;
   top: 0;
 }
-.btn-reset {
-  background-color: var(--color-dark--2);
-  color: var(--color-light--2);
-  font-size: 1.7rem;
-  font-weight: 600;
-  font-family: inherit;
-  border: none;
-  border-radius: 5px;
-  margin-bottom: 1rem;
-}
-.btn-reset:hover {
-  background-color: var(--color-light--1);
-}
-.btn-reset:active {
-  transition: all 0.15s;
-  transform: scale(0.9);
-}
+
 .form {
   background-color: var(--color-dark--2);
   border-radius: 5px;
