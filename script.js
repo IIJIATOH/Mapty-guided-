@@ -69,6 +69,7 @@ const inputDistance = document.querySelector('.form__input--distance');
 const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
+const btnReset = document.querySelector('.btn-delete');
 
 class App {
   #map;
@@ -86,6 +87,7 @@ class App {
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField);
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
+    btnReset.addEventListener('click', this.reset);
   }
   _getPosition() {
     if (navigator.geolocation)

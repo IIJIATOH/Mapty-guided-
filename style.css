@@ -113,6 +113,9 @@ a:visited {
   font-weight: 800;
 }
 
+.btn {
+  cursor: pointer;
+}
 .btn-delete {
   background-color: var(--color-dark--2);
   color: var(--color-light--2);
@@ -122,6 +125,13 @@ a:visited {
   border: none;
   border-radius: 5px;
   margin-bottom: 1rem;
+}
+.btn-delete:hover {
+  background-color: var(--color-light--1);
+}
+.btn-delete:active {
+  transition: all 0.15s;
+  transform: scale(0.9);
 }
 .form {
   background-color: var(--color-dark--2);
