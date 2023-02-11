@@ -69,7 +69,7 @@ const inputDistance = document.querySelector('.form__input--distance');
 const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
-const btnReset = document.querySelector('.btn-delete');
+const btnReset = document.querySelector('.btn-reset');
 
 class App {
   #map;
@@ -88,6 +88,7 @@ class App {
     inputType.addEventListener('change', this._toggleElevationField);
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
     btnReset.addEventListener('click', this.reset);
+    containerWorkouts.addEventListener('click', this.delete);
   }
   _getPosition() {
     if (navigator.geolocation)
@@ -212,6 +213,7 @@ class App {
   _renderWorkout(workout) {
     let html = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
+      <div class="btn btn-delete"> <span class= btn-delete__cross>&times;</span></div>
       <h2 class="workout__title">${workout.description}</h2>
       <div class="workout__details">
       <span class="workout__icon">${
@@ -294,6 +296,17 @@ class App {
 
   reset() {
     localStorage.removeItem('workouts');
+    location.reload();
+  }
+  delete(e) {
+    const btnDeleteEl = e.target.closest('.btn-delete');
+
+    if (!btnDeleteEl) return;
+    const workoutEl = btnDeleteEl.parentElement;
+
+    const workouts = JSON.parse(localStorage.getItem('workouts'));
+    const filtered = workouts.filter(item => item.id !== workoutEl.dataset.id);
+    localStorage.setItem('workouts', JSON.stringify(filtered));
     location.reload();
   }
 }
