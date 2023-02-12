@@ -325,6 +325,11 @@ class App {
       this.workout1 = workouts.findIndex(
         work => work.id === workoutEl.dataset.id
       );
+      if (this.#workout[this.workout1].type === 'running')
+        this.#workout[this.workout1].__proto__ = Running.prototype;
+      if (this.#workout[this.workout1].type === 'cycling')
+        this.#workout[this.workout1].__proto__ = Cyclyng.prototype;
+
       btnChange.classList.remove('hidden');
       console.log(e.target);
       console.log(this.workout1);
@@ -346,16 +351,17 @@ class App {
       this.#workout[this.workout1].duration = Number(inputDuration.value);
       if (this.#workout[this.workout1].type === 'running') {
         this.#workout[this.workout1].cadence = inputCadence.value;
-        // this.#workout[this.workout1].calcPace();
+        this.#workout[this.workout1].calcPace();
       }
       if (this.#workout[this.workout1].type === 'cycling') {
         this.#workout[this.workout1].elevationGain = inputElevation.value;
-        // this.#workout[this.workout1].calcSpeed();
+        this.#workout[this.workout1].calcSpeed();
       }
       console.log(this.#workout[this.workout1]);
       console.log(this.#workout);
       localStorage.removeItem('workouts');
       localStorage.setItem('workouts', JSON.stringify(this.#workout));
+      location.reload();
     }
   }
 
