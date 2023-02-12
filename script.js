@@ -71,6 +71,7 @@ const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 const btnReset = document.querySelector('.btn-reset');
 const btnChange = document.querySelector('.btn-change');
+const distanceSort = document.querySelector('.sort-distance');
 
 class App {
   #map;
@@ -92,6 +93,7 @@ class App {
     btnReset.addEventListener('click', this.reset);
     containerWorkouts.addEventListener('click', this.delete);
     containerWorkouts.addEventListener('click', this.edit.bind(this));
+    containerWorkouts.addEventListener('click', this.sort.bind(this));
   }
   _getPosition() {
     if (navigator.geolocation)
@@ -264,7 +266,7 @@ class App {
         </li>
     `;
 
-    btnChange.insertAdjacentHTML('afterend', html);
+    distanceSort.insertAdjacentHTML('afterend', html);
   }
   _moveToPopup(e) {
     const workoutEl = e.target.closest('.workout');
@@ -291,6 +293,7 @@ class App {
   }
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem('workouts'));
+    const distance = localStorage.getItem('distance');
 
     if (!data) return;
 
@@ -299,6 +302,8 @@ class App {
     this.#workout.forEach(work => {
       this._renderWorkout(work);
     });
+    if (!distance) return;
+    distanceSort.innerHTML = distance;
   }
 
   reset() {
@@ -357,6 +362,38 @@ class App {
       localStorage.setItem('workouts', JSON.stringify(this.#workout));
       location.reload();
     }
+  }
+  sort(e) {
+    if (e.target !== distanceSort) return;
+    console.log(distanceSort.innerHTML.includes(`↑`));
+    console.log(
+      !distanceSort.innerHTML.includes(`↑`) ||
+        distanceSort.innerHTML.includes(`↓`)
+    );
+    if (
+      !distanceSort.innerHTML.includes(`↑`) ||
+      distanceSort.innerHTML.includes(`↓`)
+    ) {
+      distanceSort.innerHTML = `Distance↑`;
+      this.#workout.sort((a, b) => a.distance - b.distance);
+      localStorage.removeItem('workouts');
+      localStorage.removeItem('distance');
+      localStorage.setItem('workouts', JSON.stringify(this.#workout));
+      localStorage.setItem('distance', distanceSort.innerHTML);
+      location.reload();
+      return;
+    }
+    if (distanceSort.innerHTML.includes(`↑`)) {
+      distanceSort.innerHTML = `Distance↓`;
+      this.#workout.sort((a, b) => b.distance - a.distance);
+      localStorage.removeItem('workouts');
+      localStorage.removeItem('distance');
+      localStorage.setItem('workouts', JSON.stringify(this.#workout));
+      localStorage.setItem('distance', distanceSort.innerHTML);
+      location.reload();
+      return;
+    }
+    console.log(this.#workout);
   }
 
   // Make menu for change

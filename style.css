@@ -248,6 +248,15 @@ a:visited {
   color: var(--color-light--2);
 }
 
+.sort-distance:link,
+.sort-distance:visited {
+  display: inline-block;
+  color: var(--color-light--2);
+  text-decoration: none;
+  font-size: 1.2rem;
+  margin-bottom: 0.2rem;
+}
+
 /* MAP */
 #map {
   flex: 1;
