@@ -17,7 +17,7 @@ class Workout {
 
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
       months[this.date.getMonth()]
-    }  ${this.date.getDay()}
+    }  ${this.date.getDate()}
     `;
   }
 
@@ -261,7 +261,7 @@ class App {
             <span class="workout__value">${workout.elevationGain}</span>
             <span class="workout__unit">m</span>
           </div>
-        </li> -->
+        </li>
     `;
 
     btnChange.insertAdjacentHTML('afterend', html);
@@ -319,7 +319,6 @@ class App {
   edit(e) {
     const btnEdit = e.target.closest('.btn-edit');
     const workouts = JSON.parse(localStorage.getItem('workouts'));
-    console.log();
     if (btnEdit) {
       const workoutEl = btnEdit.parentElement;
       this.workout1 = workouts.findIndex(
@@ -331,8 +330,6 @@ class App {
         this.#workout[this.workout1].__proto__ = Cyclyng.prototype;
 
       btnChange.classList.remove('hidden');
-      console.log(e.target);
-      console.log(this.workout1);
 
       // Find workout by id
       form.classList.remove('hidden');
@@ -345,7 +342,6 @@ class App {
       if (this.#workout[this.workout1].type === 'cycling')
         inputElevation.value = this.#workout[this.workout1].elevationGain;
     }
-    console.log(this.#workout[this.workout1]);
     if (e.target === btnChange) {
       this.#workout[this.workout1].distance = Number(inputDistance.value);
       this.#workout[this.workout1].duration = Number(inputDuration.value);
@@ -357,8 +353,6 @@ class App {
         this.#workout[this.workout1].elevationGain = inputElevation.value;
         this.#workout[this.workout1].calcSpeed();
       }
-      console.log(this.#workout[this.workout1]);
-      console.log(this.#workout);
       localStorage.removeItem('workouts');
       localStorage.setItem('workouts', JSON.stringify(this.#workout));
       location.reload();
